@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+export PREFIX="$PWD/mingw32"
+export PATH="$PREFIX/bin:$PATH"
+
 PREFIX=/opt/mingw32-msvcrt
 TARGET=i686-w64-mingw32
 TARGET_TARGET="--target=$TARGET"
