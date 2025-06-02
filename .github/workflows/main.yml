@@ -8,19 +8,24 @@ on:
 
 jobs:
   build:
-    runs-on: archlinux-latest
+    runs-on: ubuntu-latest
     container:
       image: archlinux:base-devel
     steps:
-      - name: Update pacman and install dependencies
+      - name: Initialize pacman keyring
+        run: |
+          pacman-key --init
+          pacman-key --populate archlinux
+
+      - name: Install dependencies
         run: |
           pacman -Sy --noconfirm
-          pacman -S --noconfirm base-devel git wget tar bison flex texinfo gcc
+          pacman -S --noconfirm git wget tar bison flex texinfo gcc
 
-      - name: clone repository
+      - name: Clone repository
         uses: actions/checkout@v4
 
-      - name: Runs the build script
+      - name: Run the build script
         run: |
           chmod +x compile-mingw32.sh
           ./compile-mingw32.sh
