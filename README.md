@@ -53,3 +53,7 @@ i686-w64-mingw32-gcc -nostdlib -static-libgcc -lmingw32 hello.c -o hello.exe
 ## 📄 License
 
 This project only automates compilations of GNU tools under their respective licenses (GPL/LGPL/BSD).
+
+## 📄 Note
+
+This repository is part of a complex project comming soon early
