@@ -1,13 +1,8 @@
-# mingw32-msvcrt
-
-[![build](https://img.shields.io/badge/build-success-brightgreen)](https://github.com/LuizRafael79/mingw32-msvcrt/actions)
-[![license](https://img.shields.io/badge/license-GPL2-blue.svg)](LICENSE)
-[![platform](https://img.shields.io/badge/platform-Linux-lightgrey)](#)
-[![status](https://img.shields.io/badge/status-stable-success)](#)
+[![Build MinGW32 MSVCRT (Arch)](https://github.com/LuizRafael79/mingw32-msvcrt/actions/workflows/main.yml/badge.svg)](https://github.com/LuizRafael79/mingw32-msvcrt/actions/workflows/main.yml)
+[![license](https://img.shields.io/badge/license-MIXED-blue.svg)](LICENSE)
+[![platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-lightgrey)](#)
 
 # MinGW32 MSVCRT Toolchain
-
-[![Build Status](https://github.com/your-user/your-repo/actions/workflows/build.yml/badge.svg)](https://github.com/your-user/your-repo/actions)
 
 `i686-w64-mingw32` cross-compiler toolchain using **MSVCRT** as default runtime. Ideal for compiling binaries compatible with Windows 9x, 2000, XP and other old systems, avoiding UCRT.
 
