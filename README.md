@@ -1,3 +1,10 @@
+# mingw32-msvcrt
+
+[![build](https://img.shields.io/badge/build-success-brightgreen)](https://github.com/seu-usuario/mingw32-msvcrt/actions)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-lightgrey)](#)
+[![status](https://img.shields.io/badge/status-stable-success)](#)
+
 # MinGW32 MSVCRT Toolchain
 
 [![Build Status](https://github.com/your-user/your-repo/actions/workflows/build.yml/badge.svg)](https://github.com/your-user/your-repo/actions)
