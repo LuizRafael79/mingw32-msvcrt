@@ -2,29 +2,29 @@ name: Build MinGW32 MSVCRT (Arch)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: archlinux-latest
     container:
       image: archlinux:base-devel
     steps:
-      - name: Atualiza pacman e instala dependências
+      - name: Update pacman and install dependencies
         run: |
           pacman -Sy --noconfirm
           pacman -S --noconfirm base-devel git wget tar bison flex texinfo gcc
 
-      - name: Clona o repositório
+      - name: clone repository
         uses: actions/checkout@v4
 
-      - name: Roda o script de build
+      - name: Runs the build script
         run: |
           chmod +x compile-mingw32.sh
           ./compile-mingw32.sh
 
-      - name: Verifica binários instalados
+      - name: Verify installed binaries
         run: |
           /opt/mingw32-msvcrt/bin/i686-w64-mingw32-gcc --version
