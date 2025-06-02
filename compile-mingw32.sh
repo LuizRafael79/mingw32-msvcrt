@@ -3,7 +3,6 @@ set -e
 
 PREFIX=/usr/local/mingw32-msvcrt
 TARGET=i686-w64-mingw32
-PATH=$PREFIX/bin:$PREFIX/$TARGET/bin:$PATH
 TARGET_TARGET="--target=$TARGET"
 PREFIX_TARGET="--prefix=$PREFIX/$TARGET"
 PREFIX_INSTALL="--prefix=$PREFIX --libdir=$PREFIX/lib --libexecdir=$PREFIX/libexec --includedir=$PREFIX/include --bindir=$PREFIX/bin --mandir=$PREFIX/share/man --infodir=$PREFIX/share/info"
