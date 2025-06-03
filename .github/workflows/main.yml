@@ -1,11 +1,16 @@
 name: Build MinGW32 MSVCRT (Arch)
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ master ]
+    paths:
+      - 'compile-mingw32.sh'
+      - '.github/workflows/build.yml'
   pull_request:
-    branches: [ master ]
-
+    paths:
+      - 'compile-mingw32.sh'
+      - '.github/workflows/build.yml'
+      
 jobs:
   build:
     runs-on: ubuntu-latest
