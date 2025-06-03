@@ -25,6 +25,37 @@ Build a clean and minimalist MinGW32 toolchain with:
 
 ## 🛠️ How to use
 
+prepare a CHROOT development environment so that your new toolchain does not have problems with your current environment (which probably already has a toolchain) as this can cause problems, to make a clean toolchain, you MUST create a clean development environment in CHROOT or Docker (if you know how to create one)
+
+Below are brief instructions for creating a CHROOT environment in Arch Linux, but this can be reproduced in any distro of your choice, just create the CHROOT according to your distro
+
+1 - install the devtools package (if it is not already installed)
+```bash
+sudo pacman -S devtools
+```
+2 - Create the CHROOT directory wherever you want (I recommend it to be in the HOME folder)
+```bash
+mkdir -p ~/chroot/mingw-root
+```
+3 - Create the clean environment in CHROOT (the command will already install the base tools and git inside the CHROOT, include something if necessary) (if you wish)
+```bash
+sudo mkarchroot ~/chroot/mingw-root/root base-devel git
+```
+4 - Enter your new isolated environment
+```bash
+sudo arch-nspawn ~/chroot/mingw-root/root
+```
+5 - Inside the CHROOT install the extra dependencies
+```bash
+pacman -Syu --noconfirm \
+gcc binutils gmp mpfr mpc zlib isl git \
+mingw-w64-headers mingw-w64-crt \
+make autoconf automake texinfo
+```
+6 - Continue following the instructions below
+
+## Prepare the script for use
+
 prepare and execute `compile-mingw.sh` with:
 ```bash
 chmod +x compile-mingw.sh
