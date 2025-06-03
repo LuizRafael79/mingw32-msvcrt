@@ -1,6 +1,9 @@
 [![Build MinGW32 MSVCRT (Arch)](https://github.com/LuizRafael79/mingw32-msvcrt/actions/workflows/main.yml/badge.svg)](https://github.com/LuizRafael79/mingw32-msvcrt/actions/workflows/main.yml)
 [![license](https://img.shields.io/badge/license-MIXED-blue.svg)](LICENSE)
-[![platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-lightgrey)](#)
+[![platform](https://img.shields.io/badge/platform-Linux-lightgreen)](#)
+[![platform](https://img.shields.io/badge/platform-Windows-red)](#)
+[![platform](https://img.shields.io/badge/platform-MacOS-red)](#)
+
 
 # MinGW32 MSVCRT Toolchain
 
