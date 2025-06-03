@@ -337,3 +337,31 @@ proprietary programs.  If your program is a subroutine library, you may
 consider it more useful to permit linking proprietary applications with the
 library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.
+
+Othes Licenses used, and mixed with GPL2 used in this Scripts
+
+✅ binutils
+License: GNU General Public License v3 (GPLv3+)
+
+Impact: Tools like ld, as, ar, etc. GPLv3 doesn't affect the binaries you compile with them, only the tools themselves.
+
+✅ GCC (GNU Compiler Collection)
+Main license: GNU General Public License v3 (GPLv3+)
+
+Except: The runtime libraries (libgcc, libstdc++, etc.)
+
+GCC libs: Use the GCC Runtime Library Exception, allowing you to distribute binaries generated with libgcc without having to release your code under GPL.
+
+✅ mingw-w64
+License: Mix of GPLv2+, LGPLv2.1+, ZPL, and permissive licenses
+
+CRT and headers: Usually under permissive licenses or LGPL, which allows use in proprietary software.
+
+Tools (e.g. widl) may be GPL'd, but do not affect your binaries.
+
+✅ MSVCRT (Microsoft C Runtime)
+License: Microsoft Proprietary
+
+Legally distributable with Windows, but not redistributable in isolation (e.g. you cannot package and publish MSVCRT yourself).
+
+Using via static toolchain (as in your case with -nostdlib and your own headers) is generally tolerated, but not officially/legally safe for wide distribution.
