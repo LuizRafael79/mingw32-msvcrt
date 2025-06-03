@@ -55,7 +55,10 @@ gcc binutils gmp mpfr mpc zlib isl git \
 mingw-w64-headers mingw-w64-crt \
 make autoconf automake texinfo
 ```
-6 - Continue following the instructions below
+6 - Clone this repository
+```bash
+git clone https://github.com/LuizRafael79/mingw32-msvcrt
+```
 
 ## Prepare the script for use
 
@@ -64,7 +67,6 @@ prepare and execute `compile-mingw.sh` with:
 chmod +x compile-mingw.sh
 ./compile-mingw-sh
 ```
-
 
 ## 🧪 Post-build
 
