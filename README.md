@@ -14,9 +14,10 @@
 Build a clean and minimalist MinGW32 toolchain with:
 
 - binutils
-- gcc (phase 1 and 2)
+- gcc (phase 1)
 - mingw-w64 headers
 - mingw-w64 CRT (with MSVCRT)
+- gcc (phase 2 - according to mingw32 to make Toolchains or Canadian Cross, is necessary to make GCC in two phases)
 - mingw-w64 tools (gendef, genidl, genpeimg, widl)
 
 ## ✅ Prerequisites
@@ -73,7 +74,8 @@ chmod +x compile-mingw.sh
 Add to PATH:
 
 ```bash
-export PATH=/opt/mingw32-msvcrt/bin:$PATH
+export PATH=$PREFIX/bin:$PATH
+edit accordingly your PREFIX configuration
 ```
 
 Example of compilation:
@@ -84,9 +86,10 @@ i686-w64-mingw32-gcc -nostdlib -static-libgcc -lmingw32 hello.c -o hello.exe
 
 ## 🖼️ Compatibility
 
-- Windows 95/98/ME
-- Windows NT 4.0/2000/XP
-- Ideal for EXEs and DLLs without modern dependencies
+- Generate code for Windows 95/98/ME/2k/XP
+- Compatible with Windows NT 4.0/2k/XP
+- Don't Work with UCRT (but you have to test it)
+- Works with MSVCRT (tested)
 
 ## 📄 License
 
