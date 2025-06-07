@@ -166,7 +166,7 @@ echo "Building PATH is -> $PATH"
 echo ""
 echo "if PATH is empty or wrong, abort script and check"
 echo ""
-read -p "Press Enter to continue..."
+#read -p "Press Enter to continue..."
 
 ##################################################
 # Built GCC Phase 1 (Only compiler without libs) #
