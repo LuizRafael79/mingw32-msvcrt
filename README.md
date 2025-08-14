@@ -7,7 +7,8 @@
 
 # MinGW32 MSVCRT Toolchain
 
-`i686-w64-mingw32` cross-compiler toolchain using **MSVCRT** as default runtime. Ideal for compiling binaries compatible with Windows 9x, 2000, XP and other old systems, avoiding UCRT.
+`i586-w64-mingw32` cross-compiler toolchain using **MSVCRT** as default runtime. 
+Ideal for compiling binaries compatible with **Windows 95/98/ME, 2000, XP** and other old systems, avoiding UCRT, while allowing **SSE2 and AVX** for modern CPUs when desired.
 
 ## 🎯 Objective
 
@@ -19,6 +20,11 @@ Build a clean and minimalist MinGW32 toolchain with:
 - mingw-w64 CRT (with MSVCRT)
 - gcc (phase 2 - according to mingw32 to make Toolchains or Canadian Cross, is necessary to make GCC in two phases)
 - mingw-w64 tools (gendef, genidl, genpeimg, widl)
+
+Supports:
+
+- **Legacy Windows** (95/98/ME/NT4/2000/XP)
+- **Modern CPU features** (SSE2, AVX) for newer systems, selectable per-project.
 
 ## ✅ Prerequisites
 
@@ -78,16 +84,51 @@ export PATH=$PREFIX/bin:$PATH
 edit accordingly your PREFIX configuration
 ```
 
-Example of compilation:
+⚡ Using the Compiler:
+
+## Legacy-safe builds (Win9x/98/ME/NT4) - default, nothing speial:
 
 ```bash
-i686-w64-mingw32-gcc -nostdlib -static-libgcc -lmingw32 hello.c -o hello.exe
+i586-w64-mingw32-gcc main.c -o main.exe
+```
+
+## Win2000+:
+```bash
+i586-w64-mingw32-gcc main.c -o main.exe -DWINVER=0x500 -D_WIN32_WINNT=0x500
+```
+
+## WinXP+"
+```bash
+i586-w64-mingw32-gcc main.c -o main.exe -DWINVER=0x501 -D_WIN32_WINNT=0x501
+```
+
+## Enable SSE2 (Pentium 4+):
+```bash
+i586-w64-mingw32-gcc main.c -o main.exe -msse2 -mfpmath=sse
+```
+(Will **not** run on 9x/NT4-era hardware.)
+
+# Enable AVX (Sandy Bridge+ and OS support):
+
+```bash
+i586-w64-mingw32-gcc main.c -o main.exe -mavx
+```
+AVX needs an OS that saves/restores  YMM state. **Windows XP does not**; think Windows 7 SP1+.
+
+# C++ small/static Runtime if desired:
+```bash
+i586-w64-mingw32-g++ main.cpp -o main.exe -static-libgcc -static-libstd++
+```
+
+Example with Legacy flags:
+```bash
+i586-w64-mingw32-gcc -nostdlib -static-libgcc -lmingw32 hello.c -o hello.exe
 ```
 
 ## 🖼️ Compatibility
 
 - Generate code for Windows 95/98/ME/2k/XP
-- Compatible with Windows NT 4.0/2k/XP
+- Compatible with Windows NT4/2000/XP
 - Don't Work with UCRT (but you have to test it)
 - Works with MSVCRT (tested)
 
@@ -98,3 +139,13 @@ This project only automates compilations of GNU tools under their respective lic
 ## 📄 Note
 
 This repository is part of a complex project comming soon early
+
+## 🗂️ Feature Matrix
+
+| Target Windows | Compiler Flag | CPU Features | Notes |
+|----------------|---------------|--------------|-------|
+| Windows 95/98/ME | `i586-w64-mingw32-gcc` | Pentium / MMX | Legacy safe |
+| Windows NT4/2000 | `-DWINVER=0x0500 -D_WIN32_WINNT=0x0500` | SSE optional | Modern CPUs can enable SSE2 |
+| Windows XP | `-DWINVER=0x0501 -D_WIN32_WINNT=0x0501` | SSE2 default | Works on most XP-era CPUs |
+| Windows 7+ | `-DWINVER=0x0601 -D_WIN32_WINNT=0x0601` | SSE2 / AVX optional | Enable AVX with `-mavx` |
+| Modern CPUs | `-msse2 -mavx` | SSE2 / AVX | Only for CPUs that support it, may break legacy Windows |
