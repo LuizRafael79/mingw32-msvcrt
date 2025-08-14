@@ -39,3 +39,5 @@ jobs:
         run: |
           /opt/win32/bin/i586-w64-mingw32-gcc --version
           /opt/win32/bin/i586-w64-mingw32-g++ --version
+          /opt/win32/bin/i686-w64-mingw32-gcc --version
+          /opt/win32/bin/i686-w64-mingw32-g++ --version

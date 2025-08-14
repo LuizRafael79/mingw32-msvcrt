@@ -7,7 +7,9 @@
 
 # MinGW32 MSVCRT Toolchain
 
-`i586-w64-mingw32` cross-compiler toolchain using **MSVCRT** as default runtime. 
+cross-compiler toolchain using **MSVCRT** as default runtime.
+Default target: `i586-w64-mingw32`. Optional overlay: `i686-w64-mingw32`.
+
 Ideal for compiling binaries compatible with **Windows 95/98/ME, 2000, XP** and other old systems, avoiding UCRT, while allowing **SSE2 and AVX** for modern CPUs when desired.
 
 ## 🎯 Objective
@@ -119,6 +121,12 @@ AVX needs an OS that saves/restores  YMM state. **Windows XP does not**; think W
 ```bash
 i586-w64-mingw32-g++ main.cpp -o main.exe -static-libgcc -static-libstd++
 ```
+
+# i686 overlay builds:
+```bash
+i686-w64-mingw32-gcc main.c -o main.exe
+```
+**Uses `--with-arch=pentiumpro` internally for i686 optimizations**
 
 Example with Legacy flags:
 ```bash

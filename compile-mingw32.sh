@@ -14,6 +14,7 @@ TC_ARCH="win32"
 BUILD_DIR="/opt/$TC_ARCH"
 PREFIX="$BUILD_DIR"
 TARGET="i586-w64-mingw32" # Pentium baseline (safe for Win95/NT4)
+I686_TARGET="i686-w64-mingw32" # i686 overlay for 200/XP+
 JOBS="$(nproc)"
 SOURCE="src-$TC_ARCH"
 
@@ -297,6 +298,47 @@ build_tool gendef
 build_tool genidl
 build_tool genpeimg
 build_tool widl
+
+#########################
+# Optional i686 overlay #
+#########################
+
+################################################
+# Build and install Binutils 2.40 i686 overlay #
+################################################
+echo "Starting Binutils i686 build..."
+cd ~/$SOURCE/binutils-${BINUTILS_VER}
+mkdir -p build-i686 && cd build-i686
+../configure \
+	--target=$I686_TARGET \
+	--host=$HOST \
+	--prefix=$PREFIX \
+	--disable-multilib \
+	--disable-nls
+make -j$JOBS
+make install
+
+#############################################
+# Build and install GCC 13.1.0 i686 overlay #
+#############################################
+echo "Starting GCC ${GCC_VER} i686 build ..."
+cd ~/$SOURCE/gcc-${GCC_VER}
+mkdir build-i686 && cd build-i686
+../configure \
+	--target=$I686_TARGET \
+	--host=$HOST \
+	--prefix=$PREFIX \
+	--with-sysroot=$PREFIX \
+	--disable-multilib \
+	--enable-languages=c,c++ \
+	--disable-nls \
+	--disable-shared \
+	--with-arch=pentiumpro \
+	--with-tune=generic \
+	--enable-sjlj-exceptions \
+	$THREADS
+make all-gcc -j$JOBS
+make install-gcc
 
 echo "Built all done! Toolchain is located in $TARGET"
 echo "Don't forget to add the $TARGET in PATH to use"
