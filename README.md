@@ -74,7 +74,7 @@ git clone https://github.com/LuizRafael79/mingw32-msvcrt
 prepare and execute `compile-mingw.sh` with:
 ```bash
 chmod +x compile-mingw.sh
-./compile-mingw-sh
+./compile-mingw.sh
 ```
 
 ## 🧪 Post-build
@@ -88,7 +88,7 @@ edit accordingly your PREFIX configuration
 
 ## ⚡ Using the Compiler:
 
-## Legacy-safe builds (Win9x/98/ME/NT4) - default, nothing speial:
+## Legacy-safe builds (Win9x/98/ME/NT4) - default, nothing special - perfect for retro:
 
 ```bash
 i586-w64-mingw32-gcc main.c -o main.exe
