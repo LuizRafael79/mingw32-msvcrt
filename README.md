@@ -86,7 +86,7 @@ export PATH=$PREFIX/bin:$PATH
 edit accordingly your PREFIX configuration
 ```
 
-⚡ Using the Compiler:
+## ⚡ Using the Compiler:
 
 ## Legacy-safe builds (Win9x/98/ME/NT4) - default, nothing speial:
 
@@ -157,3 +157,8 @@ This repository is part of a complex project comming soon early
 | Windows XP | `-DWINVER=0x0501 -D_WIN32_WINNT=0x0501` | SSE2 default | Works on most XP-era CPUs |
 | Windows 7+ | `-DWINVER=0x0601 -D_WIN32_WINNT=0x0601` | SSE2 / AVX optional | Enable AVX with `-mavx` |
 | Modern CPUs | `-msse2 -mavx` | SSE2 / AVX | Only for CPUs that support it, may break legacy Windows |
+
+## TODO
+- A Canadian Cross that generate Win32 Mingw32 with these options and...
+- A Canadian Cross that the same for... MacOS (yeah, virtually impossible but...)
+- Update average use of AVX/AVX2/SSE2/3/4 for Windows 9x/NT/2K/XP for use with Kernel mods and others hacks
