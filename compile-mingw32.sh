@@ -13,9 +13,16 @@ THREADS="--enable-threads=win32"
 TC_ARCH="win32"
 BUILD_DIR="/opt/$TC_ARCH"
 PREFIX="$BUILD_DIR"
-TARGET="i686-w64-mingw32"
+TARGET="i586-w64-mingw32" # Pentium baseline (safe for Win95/NT4)
+I686_TARGET="i686-w64-mingw32" # i686 overlay for 200/XP+
 JOBS="$(nproc)"
 SOURCE="src-$TC_ARCH"
+
+###########################################################################
+# Default to NT4/Win95 headersl override per-project of you need 2000/XP+ #
+###########################################################################
+CFLAGS+="-DWINVER=0x0400 -D_WIN32_WINNT=0x0400"
+CXXFLAGS+="$CFLAGS"
 
 #########################
 # URLs of sources files #
@@ -129,7 +136,13 @@ HOST=$(~/$SOURCE/gcc-13.1.0/config.guess)
 echo "Starting Binutils build..."
 cd binutils-${BINUTILS_VER}
 mkdir -p build && cd build
-../configure --target=$TARGET --host=$HOST --prefix=$PREFIX --with-sysroot=$PREFIX --disable-multilib --disable-nls
+../configure \
+   --target=$TARGET \
+   --host=$HOST \
+   --prefix=$PREFIX \
+   --with-sysroot=$PREFIX \
+   --disable-multilib \
+   --disable-nls
 make -j$JOBS
 make install
 
@@ -147,12 +160,18 @@ mkdir -p build && cd build
 # as per Mingw/GCC documentation for Toolchain #
 ################################################
 
-../configure --prefix=$PREFIX/$TARGET --host=$TARGET --with-sysroot=$PREFIX --enable-sdk=all --enable-idl --with-default-msvcrt=msvcrt
+../configure \
+   --prefix=$PREFIX/$TARGET \
+   --host=$TARGET \
+   --with-sysroot=$PREFIX \
+   --enable-sdk=all \
+   --enable-idl \
+   --with-default-msvcrt=msvcrt
 make install
 
 echo "Creating Symlinks"
-ln -s $PREFIX/$TARGET $PREFIX/mingw
-ln -s $PREFIX/$TARGET/lib $PREFIX/$TARGET/lib64
+ln -sf $PREFIX/$TARGET $PREFIX/mingw
+ln -sf $PREFIX/$TARGET/lib $PREFIX/$TARGET/lib64
 echo ""
 echo "Now mingw and lib64 is symlinked" 
 echo "to correct paths accepted by GCC"
@@ -176,15 +195,28 @@ cd ~/$SOURCE/gcc-${GCC_VER}
 # Download GCC Pre Requisites
 echo "Downloading GCC Pre Requisites"
 ./contrib/download_prerequisites
-mkdir -p build && cd build
+mkdir -p build-phase-1 && cd build-phase-1
 
 ##########################################
 # Configure GGC for Phase 1              # 
 # as per GCC documentation for Toolchain #
 ##########################################
 echo "Building GCC ${GCC_VERSION} with C only"
-# Building with c++ cause errors about SSE2 and AVX, help to fix that is appreciated
-../configure --target=$TARGET --host=$HOST --prefix=$PREFIX --with-sysroot=$PREFIX --disable-multilib --enable-languages=c --disable-nls --without-headers --with-default-msvcrt=msvcrt --disable-shared $THREADS
+../configure \
+   --target=$TARGET \
+   --host=$HOST \
+   --prefix=$PREFIX \
+   --with-sysroot=$PREFIX \
+   --disable-multilib \
+   --enable-languages=c \
+   --disable-nls \
+   --without-headers \
+   --with-default-msvcrt=msvcrt \
+   --disable-shared \
+   --with-arch=pentium \
+   --with-tune=generic \
+   --enable-sjlj-exceptions \
+   $THREADS
 make all-gcc -j$JOBS
 make install-gcc
 
@@ -202,7 +234,11 @@ mkdir -p build && cd build
 # as per Mingw/GCC documentation for Toolchain #
 ################################################
 
-../configure --host=$TARGET --prefix=$PREFIX/$TARGET --with-sysroot=$PREFIX --with-default-msvcrt=msvcrt
+../configure \
+   --host=$TARGET \
+   --prefix=$PREFIX/$TARGET \
+   --with-sysroot=$PREFIX \
+   --with-default-msvcrt=msvcrt
 make -j$JOBS
 make install
 
@@ -210,7 +246,21 @@ make install
 # Built GCC Phase 2 (Continues the Phase 1 #
 ############################################
 echo "Building GCC ${GCC_VER} Phase 2"
-cd ~/$SOURCE/gcc-13.1.0/build
+cd ~/$SOURCE/gcc-13.1.0
+mkdir -p build-phase-2 && cd build-phase-2
+../configure \
+   --target=$TARGET \
+   --host=$HOST \
+   --prefix=$PREFIX \
+   --with-sysroot=$PREFIX \
+   --disable-multilib \
+   --enable-languages=c,c++ \
+   --disable-nls \
+   --disable-shared \
+   --with-arch=pentium \
+   --with-tune=generic \
+   --enable-sjlj-exceptions \
+   $THREADS
 
 ##########################################
 # Configure GGC for Phase 2              #
@@ -230,29 +280,65 @@ make install
 
 echo "Building Mingw-w64 tools"
 
-echo "Building gendef"
-cd ~/$SOURCE/mingw-w64-v12.0.0/mingw-w64-tools/gendef
-./configure
+build_tool() {
+	local tool=$1
+	echo "Building $tool"
+	
+	cd ~/$SOURCE/mingw-w64-v12.0.0/mingw-w64-tools/$tool
+	if [ "$tool" == "widl" ]; then
+		./configure --target=$TARGET --prefix=$PREFIX --bindir=$PREFIX/bin
+	else
+		./configure
+	fi
+	make -j$JOBS
+	make install
+}
+
+build_tool gendef
+build_tool genidl
+build_tool genpeimg
+build_tool widl
+
+#########################
+# Optional i686 overlay #
+#########################
+
+################################################
+# Build and install Binutils 2.40 i686 overlay #
+################################################
+echo "Starting Binutils i686 build..."
+cd ~/$SOURCE/binutils-${BINUTILS_VER}
+mkdir -p build-i686 && cd build-i686
+../configure \
+	--target=$I686_TARGET \
+	--host=$HOST \
+	--prefix=$PREFIX \
+	--disable-multilib \
+	--disable-nls
 make -j$JOBS
 make install
 
-echo "Building genidl"
-cd ~/$SOURCE/mingw-w64-v12.0.0/mingw-w64-tools/genidl
-./configure
-make -j$JOBS
-make install
-
-echo "Building genpeimg"
-cd ~/$SOURCE/mingw-w64-v12.0.0/mingw-w64-tools/genpeimg
-./configure
-make -j$JOBS
-make install
-
-echo "Building widl"
-cd ~/$SOURCE/mingw-w64-v12.0.0/mingw-w64-tools/widl
-./configure --target=$TARGET --prefix=$PREFIX --bindir=$PREFIX/bin
-make -j$JOBS
-make install
+#############################################
+# Build and install GCC 13.1.0 i686 overlay #
+#############################################
+echo "Starting GCC ${GCC_VER} i686 build ..."
+cd ~/$SOURCE/gcc-${GCC_VER}
+mkdir build-i686 && cd build-i686
+../configure \
+	--target=$I686_TARGET \
+	--host=$HOST \
+	--prefix=$PREFIX \
+	--with-sysroot=$PREFIX \
+	--disable-multilib \
+	--enable-languages=c,c++ \
+	--disable-nls \
+	--disable-shared \
+	--with-arch=pentiumpro \
+	--with-tune=generic \
+	--enable-sjlj-exceptions \
+	$THREADS
+make all-gcc -j$JOBS
+make install-gcc
 
 echo "Built all done! Toolchain is located in $TARGET"
 echo "Don't forget to add the $TARGET in PATH to use"
